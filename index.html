@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Dành Cho Em 💕</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>💕</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================
+       GLOBAL RESET & VARIABLES
+    ========================================= */
+    :root {
+      --pink-light: #ffe4ec;
+      --pink-soft: #ffb6c9;
+      --pink-main: #ff7aa2;
+      --pink-deep: #e84d78;
+      --pink-glow: #ff4d7d;
+      --cream: #fff5f8;
+      --text-dark: #5a2d45;
+      --text-mid: #8c4a62;
+      --text-light: #c47a95;
+      --gold: #f7c59f;
+      --white: #ffffff;
+      --shadow: rgba(232, 77, 120, 0.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--text-dark);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* =========================================
+       FLOATING HEARTS (fixed, always visible)
+    ========================================= */
+    #hearts-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart-float {
+      position: absolute;
+      bottom: -50px;
+      font-size: 1.2rem;
+      opacity: 0;
+      animation: floatUp linear infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(0) scale(0.8) rotate(-10deg); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.3; }
+      100% { transform: translateY(-110vh) scale(1.2) rotate(15deg); opacity: 0; }
+    }
+
+    /* =========================================
+       MUSIC BUTTON (fixed)
+    ========================================= */
+    #music-btn {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 1000;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid var(--pink-soft);
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #music-btn:active { transform: scale(0.92); }
+    #music-btn.playing {
+      animation: musicPulse 1.8s ease-in-out infinite;
+      border-color: var(--pink-main);
+    }
+    @keyframes musicPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,122,162,0.4); }
+      50%      { box-shadow: 0 0 0 8px rgba(255,122,162,0); }
+    }
+
+    /* =========================================
+       NAV DOTS (fixed bottom)
+    ========================================= */
+    #nav-dots {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 900;
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(10px);
+      padding: 8px 14px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,182,201,0.5);
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+    .nav-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--pink-soft);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      border: none;
+      padding: 0;
+    }
+    .nav-dot.active {
+      background: var(--pink-deep);
+      transform: scale(1.35);
+    }
+
+    /* =========================================
+       SECTIONS (each is full-screen)
+    ========================================= */
+    section {
+      position: relative;
+      min-height: 100vh;
+      max-width: 390px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Fade in util */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { opacity: 0; animation: fadeIn 0.8s ease forwards; }
+    .delay-1 { animation-delay: 0.3s; }
+    .delay-2 { animation-delay: 0.6s; }
+    .delay-3 { animation-delay: 0.9s; }
+    .delay-4 { animation-delay: 1.2s; }
+    .delay-5 { animation-delay: 1.5s; }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+      color: var(--pink-soft);
+      font-size: 1.1rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--pink-soft), transparent);
+    }
+
+    /* Buttons */
+    .btn-main {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 15px 36px;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(135deg, var(--pink-main), var(--pink-deep));
+      color: var(--white);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.25rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 24px var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: btnGlow 2.5s ease-in-out infinite;
+      -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
+    }
+    .btn-main:active { transform: scale(0.95); }
+    @keyframes btnGlow {
+      0%,100% { box-shadow: 0 6px 24px var(--shadow), 0 0 0 0 rgba(255,122,162,0); }
+      50%      { box-shadow: 0 6px 24px var(--shadow), 0 0 20px 4px rgba(255,122,162,0.35); }
+    }
+
+    /* =========================================
+       SECTION 1 — LANDING
+    ========================================= */
+    #sec-landing {
+      background: linear-gradient(160deg, #fff0f5 0%, #ffd6e7 50%, #ffb3cc 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 28px 120px;
+      text-align: center;
+    }
+
+    .bokeh {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+    .bokeh-1 { width: 200px; height: 200px; background: radial-gradient(circle, #ff7aa2, transparent); top: -60px; right: -60px; }
+    .bokeh-2 { width: 150px; height: 150px; background: radial-gradient(circle, #ff4d7d, transparent); bottom: 80px; left: -40px; }
+    .bokeh-3 { width: 100px; height: 100px; background: radial-gradient(circle, #ffb6c9, transparent); top: 40%; left: 60%; }
+
+    .petal-ring {
+      position: relative;
+      width: 160px; height: 160px;
+      margin: 0 auto 30px;
+    }
+    .petal-ring-inner {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255,182,201,0.5), rgba(255,122,162,0.3));
+      border: 2px solid rgba(255,122,162,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 8px rgba(255,182,201,0.2), 0 0 0 16px rgba(255,182,201,0.1), 0 0 30px rgba(255,122,162,0.3);
+    }
+    .petal-emoji { font-size: 4rem; filter: drop-shadow(0 4px 12px rgba(255,77,125,0.4)); }
+
+    .orbit-petal {
+      position: absolute;
+      font-size: 1.2rem;
+      animation: orbitAnim linear infinite;
+    }
+    @keyframes orbitAnim {
+      from { transform: rotate(var(--start)) translateX(80px) rotate(calc(var(--start) * -1)); }
+      to   { transform: rotate(calc(var(--start) + 360deg)) translateX(80px) rotate(calc((var(--start) + 360deg) * -1)); }
+    }
+
+    .tag-line {
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.95rem;
+      color: var(--pink-main);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .landing-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-style: italic;
+      line-height: 1.35;
+      color: var(--text-dark);
+      margin-bottom: 14px;
+    }
+    .landing-title span { color: var(--pink-deep); display: block; }
+
+    .landing-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-mid);
+      line-height: 1.6;
+      max-width: 290px;
+      margin: 0 auto 36px;
+    }
+
+    .landing-icon {
+      font-size: 3.5rem;
+      margin-bottom: 8px;
+      animation: iconBounce 2s ease-in-out infinite;
+    }
+    @keyframes iconBounce {
+      0%,100% { transform: translateY(0) rotate(-5deg); }
+      50%      { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 30px;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .scroll-hint::after {
+      content: '↓';
+      font-size: 1rem;
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(5px); }
+    }
+
+    /* =========================================
+       SECTION 2 — STORY TIMELINE
+    ========================================= */
+    #sec-story {
+      background: linear-gradient(160deg, #fff0f5 0%, #ffe4ec 60%, #ffd1e3 100%);
+      padding: 60px 20px 120px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .section-header .page-label {
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.9rem;
+      color: var(--pink-main);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-style: italic;
+      color: var(--text-dark);
+      line-height: 1.3;
+    }
+    .section-header h2 span { color: var(--pink-deep); }
+
+    .timeline { position: relative; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, var(--pink-soft) 10%, var(--pink-soft) 90%, transparent);
+      transform: translateX(-50%);
+    }
+
+    .step-card {
+      position: relative;
+      margin-bottom: 40px;
+    }
+    .step-card:nth-child(odd)  { padding-right: calc(50% + 24px); text-align: right; }
+    .step-card:nth-child(even) { padding-left:  calc(50% + 24px); text-align: left;  }
+
+    .step-dot {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink-main), var(--pink-deep));
+      border: 3px solid white;
+      box-shadow: 0 0 0 4px rgba(255,122,162,0.25);
+      z-index: 2;
+    }
+
+    .step-content {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(232,77,120,0.12);
+      border: 1px solid rgba(255,182,201,0.5);
+    }
+
+    .img-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #ffe4ec, #ffb6c9);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+    .img-placeholder small {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.65rem;
+      color: var(--text-light);
+      font-style: italic;
+      text-align: center;
+      padding: 0 8px;
+    }
+    .step-img-real {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .step-date {
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.85rem;
+      color: var(--pink-main);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .step-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+    .step-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: var(--text-mid);
+      line-height: 1.5;
+    }
+
+    /* =========================================
+       SECTION 3 — GALLERY
+    ========================================= */
+    #sec-gallery {
+      background: linear-gradient(160deg, #fff0f5 0%, #ffe4ec 60%, #ffd1e3 100%);
+      padding: 60px 16px 120px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .photo-card {
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffe4ec, #ffb6c9);
+      box-shadow: 0 4px 16px rgba(232,77,120,0.15);
+      cursor: pointer;
+      transition: transform 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .photo-card:active { transform: scale(0.95); }
+    .photo-card.featured { grid-column: 1 / -1; }
+
+    .photo-placeholder {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+    }
+    .photo-card.featured .photo-placeholder { aspect-ratio: 16 / 9; }
+    .photo-placeholder .emoji { font-size: 2.2rem; }
+    .photo-placeholder small {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.62rem;
+      color: var(--text-light);
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* Real image support */
+    .photo-card img.photo-real {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-card.featured img.photo-real { aspect-ratio: 16/9; }
+
+    .photo-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(90,45,69,0.7) 0%, transparent 100%);
+      padding: 20px 10px 10px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.8rem;
+      color: white;
+      text-align: center;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      border-radius: 0 0 16px 16px;
+    }
+    .photo-card:hover .photo-caption,
+    .photo-card.touched .photo-caption { transform: translateY(0); }
+
+    /* Modal */
+    #modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(50, 20, 35, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #modal.open { display: flex; }
+
+    #modal-content {
+      position: relative;
+      max-width: 350px;
+      width: 100%;
+      animation: modalIn 0.35s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    #modal-img-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffe4ec, #ffb6c9);
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    #modal-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    #modal-placeholder { font-size: 5rem; }
+
+    #modal-caption {
+      text-align: center;
+      margin-top: 14px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: rgba(255,255,255,0.9);
+      font-size: 1rem;
+    }
+
+    #modal-close {
+      position: absolute;
+      top: -14px; right: -14px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: white;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* =========================================
+       SECTION 4 — MESSAGE (Typewriter)
+    ========================================= */
+    #sec-message {
+      background: linear-gradient(160deg, #fff0f5 0%, #ffe4ec 60%, #ffd1e3 100%);
+      padding: 60px 22px 120px;
+    }
+
+    .letter-paper {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 28px 24px 32px;
+      box-shadow: 0 8px 32px rgba(232,77,120,0.12), 0 2px 8px rgba(232,77,120,0.08);
+      border: 1px solid rgba(255,182,201,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .letter-paper::before {
+      content: '💌';
+      position: absolute;
+      top: 16px; right: 20px;
+      font-size: 1.6rem;
+      opacity: 0.25;
+    }
+    .letter-lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 24px;
+    }
+    .letter-lines::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(255,182,201,0.2) 31px, rgba(255,182,201,0.2) 32px);
+      background-size: 100% 32px;
+      background-position: 0 60px;
+    }
+
+    .salutation {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.35rem;
+      color: var(--pink-deep);
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    #typewriter-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      line-height: 2rem;
+      color: var(--text-dark);
+      min-height: 200px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--pink-main);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: blink 0.8s step-end infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0; }
+    }
+
+    .signature-wrap {
+      margin-top: 28px;
+      text-align: right;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .signature-wrap.show { opacity: 1; }
+    .signature-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .signature {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      color: var(--pink-deep);
+    }
+
+    .ps-msg {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,182,201,0.3);
+      opacity: 0;
+      transition: opacity 0.8s ease 0.3s;
+    }
+    .ps-msg.show { opacity: 1; }
+
+    .typing-progress {
+      height: 3px;
+      background: rgba(255,182,201,0.3);
+      border-radius: 3px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .typing-progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--pink-soft), var(--pink-deep));
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    #skip-btn {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--pink-soft);
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.8rem;
+      color: var(--text-mid);
+      cursor: pointer;
+      margin-top: 12px;
+      box-shadow: 0 2px 10px var(--shadow);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .msg-bottom-nav {
+      text-align: center;
+      padding-top: 24px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .msg-bottom-nav.show { opacity: 1; }
+
+    /* =========================================
+       SECTION 5 — ENDING
+    ========================================= */
+    #sec-ending {
+      background: linear-gradient(160deg, #ff4d7d 0%, #e84d78 40%, #c73060 80%, #a02050 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px 120px;
+      text-align: center;
+    }
+
+    #sparkle-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ending-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .ending-label {
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .heart-container {
+      position: relative;
+      margin-bottom: 36px;
+    }
+
+    .big-heart {
+      font-size: 6rem;
+      display: block;
+      filter: drop-shadow(0 0 20px rgba(255,200,220,0.6));
+      animation: heartbeat 1.2s ease-in-out infinite;
+      cursor: pointer;
+    }
+    @keyframes heartbeat {
+      0%,100% { transform: scale(1); }
+      14%      { transform: scale(1.2); }
+      28%      { transform: scale(1); }
+      42%      { transform: scale(1.15); }
+      70%      { transform: scale(1); }
+    }
+
+    .orbit-wrap {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+    }
+    .orbit-h {
+      position: absolute;
+      font-size: 1.4rem;
+      animation: orbit linear infinite;
+    }
+    @keyframes orbit {
+      from { transform: rotate(var(--start)) translateX(var(--r)) scale(0.8); }
+      to   { transform: rotate(calc(var(--start) + 360deg)) translateX(var(--r)) scale(0.8); }
+    }
+
+    .ending-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-style: italic;
+      color: white;
+      line-height: 1.35;
+      margin-bottom: 16px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+
+    .ending-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+      max-width: 300px;
+      margin: 0 auto 36px;
+    }
+
+    .divider-white {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0 28px;
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      width: 260px;
+    }
+    .divider-white::before, .divider-white::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .ending-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 15px 32px;
+      border-radius: 50px;
+      border: 2px solid rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      color: white;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-white:active { transform: scale(0.95); background: rgba(255,255,255,0.25); }
+
+    .btn-solid-white {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 15px 32px;
+      border-radius: 50px;
+      border: none;
+      background: white;
+      color: var(--pink-deep);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.25rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      animation: btnGlowWhite 2.5s ease-in-out infinite;
+    }
+    .btn-solid-white:active { transform: scale(0.95); }
+    @keyframes btnGlowWhite {
+      0%,100% { box-shadow: 0 6px 20px rgba(0,0,0,0.2), 0 0 0 0 rgba(255,255,255,0); }
+      50%      { box-shadow: 0 6px 20px rgba(0,0,0,0.2), 0 0 20px 6px rgba(255,255,255,0.3); }
+    }
+
+    .ending-hint {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.75rem;
+      margin-top: 28px;
+    }
+
+    /* =========================================
+       BURST PARTICLES
+    ========================================= */
+    #burst-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3000;
+      overflow: hidden;
+    }
+    .burst-particle {
+      position: absolute;
+      pointer-events: none;
+      animation: burstOut var(--dur) ease forwards;
+    }
+    @keyframes burstOut {
+      0%   { transform: translate(0,0) scale(0.5); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0.2); opacity: 0; }
+    }
+
+    /* =========================================
+       BOTTOM SECTION NAV BUTTONS
+    ========================================= */
+    .section-nav {
+      text-align: center;
+      padding-top: 24px;
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--pink-light); }
+    ::-webkit-scrollbar-thumb { background: var(--pink-soft); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- Floating hearts (always visible) -->
+  <div id="hearts-container"></div>
+
+  <!-- Music button (fixed) -->
+  <button id="music-btn" aria-label="Nhạc nền">🎶</button>
+  <audio id="bg-audio" src="assets/music/Perfect.mp3" loop preload="auto"></audio>
+
+  <!-- Nav dots -->
+  <div id="nav-dots">
+    <button class="nav-dot active" onclick="scrollToSection('sec-landing')" title="Trang đầu"></button>
+    <button class="nav-dot" onclick="scrollToSection('sec-story')" title="Câu chuyện"></button>
+    <button class="nav-dot" onclick="scrollToSection('sec-gallery')" title="Ký ức"></button>
+    <button class="nav-dot" onclick="scrollToSection('sec-message')" title="Tâm sự"></button>
+    <button class="nav-dot" onclick="scrollToSection('sec-ending')" title="Kết thúc"></button>
+  </div>
+
+  <!-- Burst particles container -->
+  <div id="burst-container"></div>
+
+  <!-- =============================================
+       SECTION 1: LANDING
+  ============================================= -->
+  <section id="sec-landing">
+    <div class="bokeh bokeh-1"></div>
+    <div class="bokeh bokeh-2"></div>
+    <div class="bokeh bokeh-3"></div>
+
+    <div class="petal-ring fade-in delay-1">
+      <div class="petal-ring-inner">
+        <span class="petal-emoji">🌸</span>
+      </div>
+      <span class="orbit-petal" style="--start:0deg; animation-duration:8s; top:50%; left:50%; margin:-0.6rem;">💗</span>
+      <span class="orbit-petal" style="--start:90deg; animation-duration:10s; top:50%; left:50%; margin:-0.6rem;">✨</span>
+      <span class="orbit-petal" style="--start:180deg; animation-duration:7s; top:50%; left:50%; margin:-0.6rem;">🌺</span>
+      <span class="orbit-petal" style="--start:270deg; animation-duration:9s; top:50%; left:50%; margin:-0.6rem;">💕</span>
+    </div>
+
+    <p class="tag-line fade-in delay-2">✦ Một điều nhỏ dành riêng cho em ✦</p>
+
+    <h1 class="landing-title fade-in delay-3">
+      Anh có một điều
+      <span>muốn dành riêng cho em...</span>
+    </h1>
+
+    <p class="landing-sub fade-in delay-4">
+      Một câu chuyện nhỏ, một vài ký ức,<br/>
+      và rất nhiều điều anh chưa nói hết.
+    </p>
+
+    <div class="fade-in delay-5">
+      <button class="btn-main" onclick="scrollToSection('sec-story')">
+        Chạm vào đây 💖
+      </button>
+    </div>
+
+    <p class="scroll-hint fade-in delay-5">Lướt xuống để khám phá</p>
+  </section>
+
+  <!-- =============================================
+       SECTION 2: STORY
+  ============================================= -->
+  <section id="sec-story">
+    <div class="section-header reveal">
+      <span class="page-label">✦ Chương 01 ✦</span>
+      <h2>Câu Chuyện<br/><span>Của Chúng Mình</span></h2>
+    </div>
+
+    <div class="divider reveal">🌸</div>
+
+    <div class="timeline">
+
+      <div class="step-card reveal">
+        <div class="step-dot"></div>
+        <div class="step-content">
+          <div class="img-placeholder">🌟<small>Thay bằng ảnh của em/anh 📸</small></div>
+          <span class="step-date">Ngày đầu tiên...</span>
+          <h3 class="step-title">Lần đầu gặp nhau</h3>
+          <p class="step-desc">Cái ngày mà anh không ngờ sẽ thay đổi tất cả. Em xuất hiện như một điều gì đó thật đặc biệt.</p>
+        </div>
+      </div>
+
+      <div class="step-card reveal">
+        <div class="step-dot"></div>
+        <div class="step-content">
+          <div class="img-placeholder">☕<small>Thay bằng ảnh kỷ niệm 📸</small></div>
+          <span class="step-date">Những ngày tiếp theo...</span>
+          <h3 class="step-title">Từng tin nhắn nhỏ</h3>
+          <p class="step-desc">Những cuộc trò chuyện dài, những tin nhắn khuya. Anh bắt đầu mong chờ mỗi buổi sáng được nghe giọng nói của em.</p>
+        </div>
+      </div>
+
+      <div class="step-card reveal">
+        <div class="step-dot"></div>
+        <div class="step-content">
+          <div class="img-placeholder">🌅<small>Thay bằng ảnh buổi hẹn 📸</small></div>
+          <span class="step-date">Một buổi chiều đẹp trời...</span>
+          <h3 class="step-title">Lần đầu đi chơi cùng nhau</h3>
+          <p class="step-desc">Anh nhớ mãi cảm giác bồi hồi đó. Mọi thứ xung quanh đều đẹp hơn khi có em bên cạnh.</p>
+        </div>
+      </div>
+
+      <div class="step-card reveal">
+        <div class="step-dot"></div>
+        <div class="step-content">
+          <div class="img-placeholder">🌙<small>Thay bằng ảnh kỷ niệm 📸</small></div>
+          <span class="step-date">Một đêm đáng nhớ...</span>
+          <h3 class="step-title">Khoảnh khắc anh biết</h3>
+          <p class="step-desc">Đêm đó nhìn em cười, anh biết rằng mình đã thực sự thích em rồi. Trái tim anh không còn nghe lời nữa.</p>
+        </div>
+      </div>
+
+      <div class="step-card reveal">
+        <div class="step-dot"></div>
+        <div class="step-content">
+          <div class="img-placeholder">💕<small>Thay bằng ảnh đặc biệt 📸</small></div>
+          <span class="step-date">Và bây giờ...</span>
+          <h3 class="step-title">Chúng mình ở đây</h3>
+          <p class="step-desc">Từ người lạ trở thành người quan trọng nhất. Cảm ơn em đã chọn anh, đã ở đây cùng anh.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-nav reveal">
+      <p style="font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--text-light); font-size:0.85rem; margin-bottom:16px;">Còn nhiều ký ức hơn đang chờ em...</p>
+      <button class="btn-main" onclick="scrollToSection('sec-gallery')">
+        Xem ký ức của chúng mình 📸
+      </button>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SECTION 3: GALLERY
+  ============================================= -->
+  <section id="sec-gallery">
+    <div class="section-header reveal">
+      <span class="page-label">✦ Chương 02 ✦</span>
+      <h2>Bộ Sưu Tập<br/><span>Ký Ức Của Chúng Mình</span></h2>
+      <p style="font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--text-mid); margin-top:8px; font-size:0.95rem;">Nhấn vào ảnh để phóng to 🌸</p>
+    </div>
+
+    <div class="divider reveal">💕</div>
+
+    <div class="gallery-grid">
+
+      <div class="photo-card featured reveal" onclick="openModal(this)" data-caption="Khoảnh khắc đẹp nhất của chúng mình 💕">
+        <div class="photo-placeholder"><span class="emoji">🌸</span><small>Ảnh nổi bật — Thay bằng ảnh của em 📸</small></div>
+        <div class="photo-caption">Khoảnh khắc đẹp nhất 💕</div>
+      </div>
+
+      <div class="photo-card reveal" onclick="openModal(this)" data-caption="Nụ cười của em làm anh tan chảy 😊">
+        <div class="photo-placeholder"><span class="emoji">😊</span><small>Thay ảnh 📸</small></div>
+        <div class="photo-caption">Nụ cười của em 😊</div>
+      </div>
+
+      <div class="photo-card reveal" onclick="openModal(this)" data-caption="Buổi chiều bên nhau 🌅">
+        <div class="photo-placeholder"><span class="emoji">🌅</span><small>Thay ảnh 📸</small></div>
+        <div class="photo-caption">Buổi chiều bên nhau 🌅</div>
+      </div>
+
+      <div class="photo-card reveal" onclick="openModal(this)" data-caption="Kỷ niệm cà phê ✨">
+        <div class="photo-placeholder"><span class="emoji">☕</span><small>Thay ảnh 📸</small></div>
+        <div class="photo-caption">Kỷ niệm cà phê ☕</div>
+      </div>
+
+      <div class="photo-card reveal" onclick="openModal(this)" data-caption="Em và hoa 🌺">
+        <div class="photo-placeholder"><span class="emoji">🌺</span><small>Thay ảnh 📸</small></div>
+        <div class="photo-caption">Em và hoa 🌺</div>
+      </div>
+
+      <div class="photo-card reveal" onclick="openModal(this)" data-caption="Chúng mình cùng nhau 💑">
+        <div class="photo-placeholder"><span class="emoji">💑</span><small>Thay ảnh 📸</small></div>
+        <div class="photo-caption">Cùng nhau 💑</div>
+      </div>
+
+      <div class="photo-card reveal" onclick="openModal(this)" data-caption="Khoảnh khắc ngọt ngào 🍰">
+        <div class="photo-placeholder"><span class="emoji">🍰</span><small>Thay ảnh 📸</small></div>
+        <div class="photo-caption">Ngọt ngào 🍰</div>
+      </div>
+
+      <div class="photo-card reveal" onclick="openModal(this)" data-caption="Hạnh phúc nhỏ 🌟">
+        <div class="photo-placeholder"><span class="emoji">🌟</span><small>Thay ảnh 📸</small></div>
+        <div class="photo-caption">Hạnh phúc nhỏ 🌟</div>
+      </div>
+
+      <div class="photo-card reveal" onclick="openModal(this)" data-caption="Yêu em thật nhiều 💗">
+        <div class="photo-placeholder"><span class="emoji">💗</span><small>Thay ảnh 📸</small></div>
+        <div class="photo-caption">Yêu em 💗</div>
+      </div>
+
+      <div class="photo-card reveal" onclick="openModal(this)" data-caption="Luôn bên nhau nhé 🤝">
+        <div class="photo-placeholder"><span class="emoji">🤝</span><small>Thay ảnh 📸</small></div>
+        <div class="photo-caption">Luôn bên nhau 🤝</div>
+      </div>
+
+    </div>
+
+    <div class="section-nav reveal">
+      <button class="btn-main" onclick="scrollToSection('sec-message')">
+        Đọc tâm sự của anh 💌
+      </button>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div id="modal" onclick="closeModal()">
+    <div id="modal-content" onclick="event.stopPropagation()">
+      <button id="modal-close" onclick="closeModal()">✕</button>
+      <div id="modal-img-wrap">
+        <img id="modal-img" src="" alt="Memory" />
+        <span id="modal-placeholder"></span>
+      </div>
+      <p id="modal-caption"></p>
+    </div>
+  </div>
+
+  <!-- =============================================
+       SECTION 4: MESSAGE
+  ============================================= -->
+  <section id="sec-message">
+    <div class="section-header reveal">
+      <span class="page-label">✦ Chương 03 ✦</span>
+      <h2>Tâm Sự<br/><span>Của Anh</span></h2>
+    </div>
+
+    <div class="divider reveal">💌</div>
+
+    <div class="reveal">
+      <div class="typing-progress">
+        <div class="typing-progress-bar" id="progress-bar"></div>
+      </div>
+
+      <div class="letter-paper">
+        <div class="letter-lines"></div>
+        <span class="salutation">Em yêu ơi,</span>
+        <div id="typewriter-text"><span id="cursor"></span></div>
+        <div class="signature-wrap" id="signature-wrap">
+          <span class="signature-label">Gửi đến em, với tất cả tấm lòng</span>
+          <span class="signature">Anh của em 💕</span>
+        </div>
+        <p class="ps-msg" id="ps-msg">
+          P.S. — Cảm ơn em đã kiên nhẫn đọc đến đây. Mỗi chữ anh viết đều xuất phát từ trái tim anh. ❤️
+        </p>
+      </div>
+
+      <div style="text-align:center; margin-top:12px;">
+        <button id="skip-btn" onclick="skipTyping()">Bỏ qua ⏭</button>
+      </div>
+    </div>
+
+    <div class="msg-bottom-nav" id="msg-bottom-nav">
+      <button class="btn-main" onclick="scrollToSection('sec-ending')">
+        Xem điều cuối cùng 💖
+      </button>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SECTION 5: ENDING
+  ============================================= -->
+  <section id="sec-ending">
+    <canvas id="sparkle-canvas"></canvas>
+
+    <div class="ending-content">
+      <span class="ending-label reveal">✦ Chương cuối ✦</span>
+
+      <div class="heart-container reveal">
+        <span class="big-heart" id="big-heart" onclick="triggerBurst()">❤️</span>
+        <div class="orbit-wrap">
+          <span class="orbit-h" style="--start:0deg;   --r:80px; animation-duration:6s;">💗</span>
+          <span class="orbit-h" style="--start:120deg; --r:80px; animation-duration:8s;">💕</span>
+          <span class="orbit-h" style="--start:240deg; --r:80px; animation-duration:7s;">✨</span>
+          <span class="orbit-h" style="--start:60deg;  --r:60px; animation-duration:5s;">🌸</span>
+          <span class="orbit-h" style="--start:180deg; --r:60px; animation-duration:9s;">💖</span>
+        </div>
+      </div>
+
+      <h2 class="ending-main reveal">
+        Cảm ơn em<br/>vì đã ở bên anh 💕
+      </h2>
+
+      <div class="divider-white reveal">🌸</div>
+
+      <p class="ending-sub reveal">
+        Mỗi ngày có em là một ngày anh thêm biết ơn cuộc đời. Dù tương lai thế nào, anh vẫn sẽ luôn ở đây.
+      </p>
+
+      <div class="ending-btns reveal">
+  <button class="btn-solid-white" onclick="triggerWordBurst()">
+    Chạm để anh nói với em 💬
+  </button>
+</div>
+
+<div id="word-burst-area" style="min-height:80px; position:relative; width:100%; margin-top:8px;"></div>
+
+<p class="ending-hint reveal">✦ Nhấn vào trái tim để bùng nổ ✦</p>
+    </div>
+  </section>
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    /* ---- Scroll to section ---- */
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* ---- Music Player ---- */
+    (function initMusic() {
+      const btn = document.getElementById('music-btn');
+      const audio = document.getElementById('bg-audio');
+      audio.volume = 0.5;
+
+      let userPaused = localStorage.getItem('musicPaused') === 'true';
+      let isPlaying = false;
+
+      function setPlaying(state) {
+        isPlaying = state;
+        btn.textContent = state ? '🎵' : '🎶';
+        state ? btn.classList.add('playing') : btn.classList.remove('playing');
+        localStorage.setItem('musicPaused', state ? 'false' : 'true');
+      }
+
+      function tryPlay() {
+        if (userPaused) return;
+        audio.play().then(() => setPlaying(true)).catch(() => {});
+      }
+
+      tryPlay();
+
+      function onFirstInteraction() {
+        if (!isPlaying && !userPaused) tryPlay();
+        document.removeEventListener('touchstart', onFirstInteraction);
+        document.removeEventListener('click', onFirstInteraction);
+      }
+      document.addEventListener('touchstart', onFirstInteraction, { passive: true });
+      document.addEventListener('click', onFirstInteraction);
+
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (isPlaying) {
+          audio.pause();
+          userPaused = true;
+          setPlaying(false);
+        } else {
+          userPaused = false;
+          audio.play().then(() => setPlaying(true)).catch(() => {});
+        }
+      });
+
+      if (!userPaused) btn.textContent = '🎵';
+    })();
+
+    /* ---- Floating Hearts ---- */
+    (function initHearts() {
+      const container = document.getElementById('hearts-container');
+      const heartChars = ['💗','💕','💖','💓','🌸','✨','💝','🌺'];
+      let lastTime = 0;
+
+      function spawnHeart(ts) {
+        if (ts - lastTime > 700) {
+          lastTime = ts;
+          const el = document.createElement('span');
+          el.className = 'heart-float';
+          el.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+          const x = 5 + Math.random() * 90;
+          const dur = 5 + Math.random() * 5;
+          const size = 0.8 + Math.random() * 0.8;
+          el.style.cssText = `left:${x}%; font-size:${size}rem; animation-duration:${dur}s;`;
+          container.appendChild(el);
+          setTimeout(() => el.remove(), dur * 1000 + 200);
+        }
+        requestAnimationFrame(spawnHeart);
+      }
+      requestAnimationFrame(spawnHeart);
+    })();
+
+    /* ---- Nav Dots & Scroll Tracking ---- */
+    (function initNavDots() {
+      const sections = ['sec-landing','sec-story','sec-gallery','sec-message','sec-ending'];
+      const dots = document.querySelectorAll('.nav-dot');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const idx = sections.indexOf(entry.target.id);
+            if (idx >= 0) {
+              dots.forEach(d => d.classList.remove('active'));
+              dots[idx].classList.add('active');
+            }
+          }
+        });
+      }, { threshold: 0, rootMargin: '-40% 0px -40% 0px' });
+
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    })();
+
+    /* ---- Scroll Reveal ---- */
+    (function initReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visible'), 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    })();
+
+    /* ---- Gallery Touch Caption ---- */
+    document.querySelectorAll('.photo-card').forEach(card => {
+      card.addEventListener('touchstart', function() {
+        document.querySelectorAll('.photo-card.touched').forEach(c => c.classList.remove('touched'));
+        this.classList.add('touched');
+      }, { passive: true });
+    });
+
+    /* ---- Gallery Modal ---- */
+    function openModal(card) {
+      const caption = card.dataset.caption || '';
+      const img = card.querySelector('img.photo-real');
+      const emoji = card.querySelector('.emoji');
+      const modalImg = document.getElementById('modal-img');
+      const modalPlaceholder = document.getElementById('modal-placeholder');
+      const modal = document.getElementById('modal');
+
+      if (img) {
+        modalImg.src = img.src;
+        modalImg.style.display = 'block';
+        modalPlaceholder.style.display = 'none';
+      } else if (emoji) {
+        modalPlaceholder.textContent = emoji.textContent;
+        modalPlaceholder.style.display = 'block';
+        modalImg.style.display = 'none';
+      }
+
+      document.getElementById('modal-caption').textContent = caption;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    let touchStartY = 0;
+    document.getElementById('modal').addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
+    document.getElementById('modal').addEventListener('touchend', e => {
+      if (e.changedTouches[0].clientY - touchStartY > 80) closeModal();
+    }, { passive: true });
+
+    /* ---- Typewriter Effect ---- */
+    (function initTypewriter() {
+      const message = `Có những điều anh đã muốn nói với em từ lâu, nhưng không biết bắt đầu từ đâu. Có lẽ vì những cảm xúc ấy quá lớn, quá nhiều, đến nỗi không có từ ngữ nào diễn tả cho đủ.
+
+Từ lần đầu gặp em, anh đã cảm thấy có điều gì đó khác biệt. Không phải vì em xinh đẹp — dù em rất xinh — mà vì em có một năng lượng đặc biệt, một sự ấm áp khiến bất kỳ ai ở gần em cũng cảm thấy dễ chịu hơn.
+
+Anh thích cái cách em cười mỗi khi nghe điều gì đó buồn cười. Anh thích cái cách em lo lắng cho người khác, dù bản thân em cũng đang có chuyện riêng. Anh thích những lúc em vô tình nói điều gì đó chân thật đến mức anh phải dừng lại và nhìn em một lúc.
+
+Ở bên em, anh học được rằng hạnh phúc không nhất thiết phải là điều gì to lớn. Đôi khi chỉ là một buổi chiều bên nhau, một cuộc trò chuyện dài không đầu không đuôi, một tin nhắn đêm khuya — thế là đủ.
+
+Anh biết mình chưa hoàn hảo. Có những lúc anh vụng về, có những lúc anh không biết nói gì. Nhưng anh muốn em biết: dù thế nào, anh luôn ở đây. Luôn muốn nhìn thấy em vui. Luôn muốn là người em có thể tựa vào.
+
+Cảm ơn em vì đã tin tưởng anh. Vì đã chọn ở lại. Vì đã cho anh cơ hội được yêu em đúng cách.
+
+Anh yêu em — không phải theo kiểu hoàn hảo hay đẹp như trong phim, mà theo cái cách thật nhất mà anh có thể.`;
+
+      const container = document.getElementById('typewriter-text');
+      const cursor = document.getElementById('cursor');
+      const progressBar = document.getElementById('progress-bar');
+      const signatureWrap = document.getElementById('signature-wrap');
+      const psMsg = document.getElementById('ps-msg');
+      const bottomNav = document.getElementById('msg-bottom-nav');
+      const skipBtn = document.getElementById('skip-btn');
+
+      let charIndex = 0;
+      let typingInterval = null;
+      let started = false;
+      const SPEED = 28;
+
+      function typeNext() {
+        if (charIndex >= message.length) { finishTyping(); return; }
+        const char = message[charIndex];
+        if (char === '\n') {
+          container.insertBefore(document.createElement('br'), cursor);
+          if (message[charIndex + 1] === '\n') {
+            container.insertBefore(document.createElement('br'), cursor);
+            charIndex++;
+          }
+        } else {
+          container.insertBefore(document.createTextNode(char), cursor);
+        }
+        charIndex++;
+        progressBar.style.width = (charIndex / message.length * 100) + '%';
+        cursor.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+
+      function finishTyping() {
+        if (typingInterval) { clearInterval(typingInterval); typingInterval = null; }
+        cursor.style.display = 'none';
+        progressBar.style.width = '100%';
+        signatureWrap.classList.add('show');
+        psMsg.classList.add('show');
+        bottomNav.classList.add('show');
+        skipBtn.style.display = 'none';
+      }
+
+      window.skipTyping = function() {
+        if (typingInterval) { clearInterval(typingInterval); typingInterval = null; }
+        while (container.firstChild) container.removeChild(container.firstChild);
+        container.appendChild(cursor);
+        message.split('\n').forEach((part, i, arr) => {
+          container.insertBefore(document.createTextNode(part), cursor);
+          if (i < arr.length - 1) container.insertBefore(document.createElement('br'), cursor);
+        });
+        charIndex = message.length;
+        finishTyping();
+      };
+
+      // Start typing when section enters viewport
+      const msgSection = document.getElementById('sec-message');
+      const startObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !started) {
+          started = true;
+          setTimeout(() => {
+            typingInterval = setInterval(typeNext, SPEED);
+          }, 600);
+          startObserver.disconnect();
+        }
+      }, { threshold: 0.3 });
+      startObserver.observe(msgSection);
+    })();
+
+    /* ---- Sparkle Canvas (Ending) ---- */
+    (function initSparkles() {
+      const canvas = document.getElementById('sparkle-canvas');
+      const ctx = canvas.getContext('2d');
+      const particles = [];
+      let W, H, active = false;
+
+      function resize() {
+        const sec = document.getElementById('sec-ending');
+        W = canvas.width = sec.offsetWidth;
+        H = canvas.height = sec.offsetHeight;
+      }
+
+      function spawnSparkle() {
+        particles.push({
+          x: Math.random() * W, y: Math.random() * H,
+          size: 2 + Math.random() * 3,
+          alpha: 0, maxAlpha: 0.4 + Math.random() * 0.5,
+          speed: 0.02 + Math.random() * 0.03,
+          phase: 'in',
+          vx: -0.3 + Math.random() * 0.6,
+          vy: -0.5 + Math.random() * -0.15,
+        });
+      }
+
+      let last = 0;
+      function animate(ts) {
+        if (!active) return;
+        ctx.clearRect(0, 0, W, H);
+        if (ts - last > 120) {
+          last = ts;
+          spawnSparkle();
+          if (particles.length > 60) particles.splice(0, 1);
+        }
+        particles.forEach((p, i) => {
+          if (p.phase === 'in') { p.alpha += p.speed; if (p.alpha >= p.maxAlpha) p.phase = 'out'; }
+          else { p.alpha -= p.speed * 0.6; if (p.alpha <= 0) { particles.splice(i, 1); return; } }
+          p.x += p.vx; p.y += p.vy;
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = 'rgba(255,200,220,0.8)';
+          const s = p.size;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y - s); ctx.lineTo(p.x + s*0.25, p.y - s*0.25);
+          ctx.lineTo(p.x + s, p.y); ctx.lineTo(p.x + s*0.25, p.y + s*0.25);
+          ctx.lineTo(p.x, p.y + s); ctx.lineTo(p.x - s*0.25, p.y + s*0.25);
+          ctx.lineTo(p.x - s, p.y); ctx.lineTo(p.x - s*0.25, p.y - s*0.25);
+          ctx.closePath(); ctx.fill(); ctx.restore();
+        });
+        requestAnimationFrame(animate);
+      }
+
+      const endSec = document.getElementById('sec-ending');
+      new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !active) {
+          active = true;
+          resize();
+          requestAnimationFrame(animate);
+          // Auto burst
+          setTimeout(triggerBurst, 800);
+          setTimeout(triggerBurst, 2200);
+        }
+      }, { threshold: 0.3 }).observe(endSec);
+
+      window.addEventListener('resize', () => { if (active) resize(); });
+    })();
+
+    /* ---- Heart Burst ---- */
+    window.triggerBurst = function() {
+      const burst = document.getElementById('burst-container');
+      const heart = document.getElementById('big-heart');
+      const rect = heart.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const emojis = ['💗','💕','💖','💝','✨','🌸','🌺','💫','🎉','💓'];
+
+      for (let i = 0; i < 20; i++) {
+        const el = document.createElement('span');
+        el.className = 'burst-particle';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        const angle = (i / 20) * Math.PI * 2;
+        const dist = 80 + Math.random() * 120;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist - 40;
+        const dur = 0.6 + Math.random() * 0.6;
+        el.style.cssText = `left:${cx}px; top:${cy}px; --tx:${tx}px; --ty:${ty}px; --dur:${dur}s; font-size:${0.9 + Math.random()}rem; margin:-0.5rem 0 0 -0.5rem;`;
+        burst.appendChild(el);
+        setTimeout(() => el.remove(), dur * 1000 + 100);
+      }
+
+      heart.style.transform = 'scale(1.5)';
+      heart.style.transition = 'transform 0.15s ease';
+      setTimeout(() => { heart.style.transform = ''; heart.style.transition = ''; }, 300);
+    };
+
+    /* ---- Word Burst (trang cuối) ---- */
+window.triggerWordBurst = function() {
+  triggerBurst();
+  const area = document.getElementById('word-burst-area');
+  area.innerHTML = '';
+
+  const lines = [
+    ' Anh yêu em Hạ ơiiiiiii ❤️',
+    ' Cảm ơn em đã là em...',
+    ' Đã đến bên anh,',
+    ' Đã cho anh cơ hội',
+    ' được yêu em theo cách của anh.',
+    ' Mãi mãi bên em nhé, Hạ.',
+  ];
+
+  area.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 10px;
+    width: 100%;
+  `;
+
+  lines.forEach((line, i) => {
+    const p = document.createElement('p');
+    p.textContent = line;
+    p.style.cssText = `
+      font-family: 'Dancing Script', cursive;
+      font-size: ${i === 0 ? '1.5rem' : '1.15rem'};
+      color: white;
+      text-align: center;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      margin: 0;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+      line-height: 1.5;
+    `;
+    area.appendChild(p);
+
+    setTimeout(() => {
+      p.style.opacity = '1';
+      p.style.transform = 'translateY(0)';
+    }, i * 600 + 200);
+  });
+};
+// Inject wordPop keyframe nếu chưa có
+(function() {
+  const s = document.createElement('style');
+  s.textContent = `
+    @keyframes wordPop {
+      0%   { opacity: 0; transform: translateY(calc(var(--row, 0) * 28px)) scale(0.7); }
+      60%  { opacity: 1; transform: translateY(calc(var(--row, 0) * 28px)) scale(1.1); }
+      100% { opacity: 1; transform: translateY(calc(var(--row, 0) * 28px)) scale(1); }
+    }
+  `;
+  document.head.appendChild(s);
+})();
+  </script>
+
+</body>
+</html>
